@@ -26,40 +26,48 @@ Due to GitHub size limitations, large files are hosted externally. The following
 
 ### Important Notice
 
-> **Rootfs is the only part of the firmware that can be built with open-source code.** The remaining components are proprietary and not shared.
+> **Rootfs is the only part of the firmware that can be built with open-source code.** The remaining components are proprietary and not shared. It does not mean that you can not create a firmware , actually everything in firmware can be modified except Kernel.
 
 ### Build Process
 
 1. Download the required source files listed above
-2. Place them in the `source/` directory
-3. Use the provided tools (coming soon) to create custom firmware by modifying the rootfs part
+2. Place them in the `source/` directory, make changes
+3. Use the provided tool (coming soon) to create custom firmware by modifying the rootfs part
+   The tool will also signe the firmware , ready to flash.
 
 ### Coming Soon
 
 - Build tools and scripts
-- SDK configuration files
+- SDK files
 - Cross-compilation environment setup
 - Custom rootfs creation guide
 
 ## 📁 Directory Structure
 DX-EX3310-T0_Openwrt_Hybrid/
 ├── source/ # Required source files (download here)
+
 ├── xx3301/ # Build configuration
+
 ├── rootfs/ # Root filesystem (modify this)
+
 ├── docs/ # Documentation
+
 ├── final.bin # Generated firmware output
+
 ├── firmware.bin # Generated firmware output
+
 ├── README.md # This file
+
 ├── LICENSE # GPL v2 License
+
 ├── CHANGELOG.txt # Version history
+
 └── QUICK-START.txt # Quick start guide
 
 
 ## ⚠️ License
 
-This project is licensed under the GNU General Public License v2.0.
-
-Proprietary components remain property of their respective owners.
+This project is licensed under the GNU General Public License v2.0. Proprietary components remain the property of their respective owners and are not shared. The firmware leaves all property utilities on the router under the custody of the original owner.
 
 ---
 
