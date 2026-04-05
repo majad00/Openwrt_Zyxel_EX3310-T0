@@ -1,12 +1,12 @@
 # Legal Considerations for Zyxel-Matrix Hybrid OS
-
+If you choose to develop firmware using open-source and proprietary software, while ensuring the proprietary software remains on the device, does this render the entire project illegal?
 ## The Linux Kernel syscall Exception
 
 The Linux kernel is licensed under GPLv2, but it includes a special "syscall" exception. This exception clearly states that userspace programs that interface with the kernel through "normal system calls" are **not considered derivative works**.
 
 > Source: [OpenSource StackExchange](https://opensource.stackexchange.com/revisions/d7584147-96e4-4321-a5cd-637a1c6cef97/view-source)
 
-## Your Custom Rootfs is Not Bound by GPL
+## Our Custom Rootfs is Not Bound by GPL
 
 Your custom rootfs—the squashfs image containing BusyBox, your scripts, and other tools—is a collection of **userspace programs**. Because it communicates with the Linux kernel through standard system calls, it is **not bound by the GPL**.
 
@@ -59,11 +59,11 @@ The resulting hybrid firmware file is simply a distribution of the original GPL 
 | Component | License Status |
 |-----------|----------------|
 | Linux Kernel (unmodified) | GPLv2 (provided by Zyxel) |
-| Rootfs (your custom squashfs) | Your choice (proprietary or open) |
+| Rootfs ( custom squashfs) | Our choice (proprietary or open) |
 | Combined Hybrid Firmware | No additional GPL obligations |
 
 ---
 
-**Disclaimer:** This information is provided for educational purposes and does not constitute legal advice. Consult a qualified attorney for legal guidance specific to your situation.
+**Disclaimer:** This information is provided for educational purposes and does not constitute legal advice. Consult a qualified attorney for legal guidance.
 
 **Last Updated:** April 2026
