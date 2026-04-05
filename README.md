@@ -38,7 +38,7 @@ The download includes:
 4. **Run Loader**: From drop down menu Select Maintenance → click Firmware Upgrade
 5. **Wait** 2-3 minutes for first boot
 6. **Connect WiFi**: `Zyxel_Matrix` / `12345678` ( disable by default)
-7. **Configure**: http://192.168.2.1 (root/no passwrod)
+7. **Configure**: http://192.168.1.1 (root/no passwrod)
 
 > ⚠️ **IMPORTANT**: Change password immediately after first boot!
 >⚠️ **IMPORTANT**: After flashing Zyxel-Matrix, please reset to make sure previous Zyxel settings removed
