@@ -75,29 +75,18 @@ start() {
         ifconfig rai$i up 2>/dev/null
         #brctl addif br-lan rai$i 2>/dev/null
     done
-
+	echo "V15" > /tmp/sysinfo/model ; mkdir /tmp/sysinfo ; echo "EX-3310-T0" > /tmp/sysinfo/board_name
     SSID_2G=$(uci -q get wireless.@wifi-iface[0].ssid)
     KEY_2G=$(uci -q get wireless.@wifi-iface[0].key)
-
     SSID_5G=$(uci -q get wireless.@wifi-iface[1].ssid)
     KEY_5G=$(uci -q get wireless.@wifi-iface[1].key)
 
-
-   chroot /tmp/zyxel_root/ usr/sbin/iwpriv ra0 set EncrypType=AES
-   chroot /tmp/zyxel_root /usr/sbin/iwpriv rai5 set AuthMode=WPA2PSK
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set AuthMode=WPA2PSK
-   chroot /tmp/zyxel_root /usr/sbin/iwpriv rai5 set WPAPSK=AES
-	chroot /tmp/zyxel_root /usr/sbin/iwpriv rai5 set WPAPSK="$KEY_5G"
-	chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set WPAPSK="$KEY_2G"
-	 #last
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set SSID="$SSID_2G"
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv rai5 set SSID="$SSID_5G"
 
    #wrappers dont uncomment they are for backup it can make chaoes
 	#/usr/bin/zyxel_wifi_sync & moved to hook
 	# /usr/bin/t_watch.sh & moved to startup
 	#/usr/sbin/wifi_watcher & dont need
-	
+	/usr/bin/zyxel_wifi_sync
 	/usr/bin/zyxel_button_handler &
    #/etc/init.d/network restart
    #/etc/init.d/firewall restart
@@ -108,7 +97,7 @@ start() {
                         sleep 1
         done
         echo -n " > > > " > /dev/console
-		echo -n " > > System Ready! " ;echo "80 8 1 0 0" > /proc/tc3162/led_def ;		echo "82 6 1 0 1" > /proc/tc3162/led_def
+		echo -n " > > System Ready! " 
         LAN_NET=$(/os/usr/sbin/ip -o -f inet addr show br-lan | awk '{print $4}')
         echo 1 > /proc/sys/net/ipv4/ip_forward 2>/dev/null
 		echo 1 > /proc/tc3162/hwnat_off 2>/dev/null
@@ -120,7 +109,7 @@ start() {
                 #chroot /tmp/zyxel_root /usr/sbin/iptables -t nat -A POSTROUTING -s $LAN_NET -o nas10 -j MASQUERADE
 				/etc/init.d/network restart				
        fi
-	    echo 0 > /proc/tc3162/led_pwr_red ; sleep 10 ;		echo 1 > /proc/tc3162/led_pwr_red
+		echo "80 8 1 0 0" > /proc/tc3162/led_def ;		echo "82 6 1 0 1" > /proc/tc3162/led_def
         chroot /tmp/zyxel_root /usr/sbin/iptables -t nat -A POSTROUTING -o nas10 -j MASQUERADE
         chroot /tmp/zyxel_root /usr/sbin/iptables -P INPUT ACCEPT
         chroot /tmp/zyxel_root /usr/sbin/iptables -I INPUT -p udp --dport 53 -j ACCEPT
@@ -128,5 +117,6 @@ start() {
         chroot /tmp/zyxel_root /usr/sbin/iptables -P FORWARD ACCEPT
         echo "nameserver 8.8.8.8" > /etc/resolv.conf
 		/usr/sbin/dnsmasq -u root -S 8.8.8.8 -S 8.8.4.4
+		echo 0 > /proc/tc3162/led_pwr_red ; sleep 10 ;		echo 1 > /proc/tc3162/led_pwr_red
 		
 }

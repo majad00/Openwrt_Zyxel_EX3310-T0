@@ -159,418 +159,125 @@ alfa_check_image() {
 }
 
 
-platform_check_image() {
-	local board=$(ar71xx_board_name)
-	[ "$#" -gt 1 ] && return 1
-
-	local zyxel_magic=$(dd if="$1" bs=1 count=4 2>/dev/null | hexdump -v -e '1/1 "%02x"')
-	if [ "$zyxel_magic" != "32524448" ]; then
-		echo "Upgrade Aborted: Missing Zyxel HDR2 signature. Invalid image format." > /dev/console
-		return 1
-	fi
-
-	if ! tail -c 1048576 "$1" 2>/dev/null | strings | grep -q "majad"; then
-		
-
-		echo " " > /dev/console
-		echo "================================================================" > /dev/console
-		echo " WARNING: OFFICIAL ZYXEL FIRMWARE DETECTED" > /dev/console
-		echo "================================================================" > /dev/console
-		echo " Flashing this file will completely remove the Matrix OS and " > /dev/console
-		echo " restore the router to its factory original state." > /dev/console
-		echo " " > /dev/console
-		echo " I ACCEPT: If you accept this risk and wish to proceed, please" > /dev/console
-		echo " check the 'Force upgrade' box on the LuCI flash page and " > /dev/console
-		echo " upload the image again." > /dev/console
-		echo "================================================================" > /dev/console
-
-		return 1
-	fi
-
-
-	local magic="$(get_magic_word "$1")"
-	local magic_long="$(get_magic_long "$1")"
-
-	case "$board" in
-	all0315n | \
-
-	case "$board" in
-	all0315n | \
-	all0258n | \
-	cap4200ag)
-		platform_check_image_allnet "$1" && return 0
-		return 1
-		;;
-	alfa-ap96 | \
-	alfa-nx | \
-	ap113 | \
-	ap121 | \
-	ap121-mini | \
-	ap136-010 | \
-	ap136-020 | \
-	ap135-020 | \
-	ap96 | \
-	bxu2000n-2-a1 | \
-	db120 | \
-	f9k1115v2 |\
-	hornet-ub | \
-	mr12 | \
-	mr16 | \
-	wpj558 | \
-	zcn-1523h-2 | \
-	zcn-1523h-5)
-		[ "$magic_long" != "68737173" -a "$magic_long" != "19852003" ] && {
-			echo "Invalid image type."
-			return 1
-		}
-		return 0
-		;;
-	ap81 | \
-	ap83 | \
-	ap132 | \
-	dgl-5500-a1 |\
-	dhp-1565-a1 |\
-	dir-505-a1 | \
-	dir-600-a1 | \
-	dir-615-c1 | \
-	dir-615-e1 | \
-	dir-615-e4 | \
-	dir-615-i1 | \
-	dir-825-c1 | \
-	dir-835-a1 | \
-	dlan-pro-500-wp | \
-	dlan-pro-1200-ac | \
-	dragino2 | \
-	epg5000 | \
-	esr1750 | \
-	esr900 | \
-	ew-dorin | \
-	ew-dorin-router | \
-	hiwifi-hc6361 | \
-	hornet-ub-x2 | \
-	mzk-w04nu | \
-	mzk-w300nh | \
-	tew-632brp | \
-	tew-712br | \
-	tew-732br | \
-	wrt400n | \
-	airgateway | \
-	airrouter | \
-	bullet-m | \
-	loco-m-xw | \
-	nanostation-m | \
-	rocket-m | \
-	rocket-m-xw | \
-	nanostation-m-xw | \
-	rw2458n | \
-	wpj531 | \
-	wndap360 | \
-	wpj344 | \
-	wzr-hp-g300nh2 | \
-	wzr-hp-g300nh | \
-	wzr-hp-g450h | \
-	wzr-hp-ag300h | \
-	wzr-450hp2 | \
-	whr-g301n | \
-	whr-hp-g300n | \
-	whr-hp-gn | \
-	wlae-ag300n | \
-	nbg460n_550n_550nh | \
-	unifi | \
-	unifi-outdoor | \
-	carambola2 | \
-	weio )
-		[ "$magic" != "2705" ] && {
-			echo "Invalid image type."
-			return 1
-		}
-		return 0
-		;;
-
-	cpe510)
-		tplink_pharos_check_image "$1" && return 0
-		return 1
-		;;
-
-	bsb | \
-	dir-825-b1 | \
-	tew-673gru)
-		dir825b_check_image "$1" && return 0
-		;;
-
-	mynet-rext|\
-	wrt160nl)
-		cybertan_check_image "$1" && return 0
-		return 1
-		;;
-
-	qihoo-c301 | \
-	mynet-n600 | \
-	mynet-n750)
-		[ "$magic_long" != "5ea3a417" ] && {
-			echo "Invalid image, bad magic: $magic_long"
-			return 1
-		}
-
-		local typemagic=$(seama_get_type_magic "$1")
-		[ "$typemagic" != "6669726d" ] && {
-			echo "Invalid image, bad type: $typemagic"
-			return 1
-		}
-
-		return 0;
-		;;
-	mr600 | \
-	mr600v2 | \
-	mr900 | \
-	mr900v2 | \
-	om2p | \
-	om2pv2 | \
-	om2p-hs | \
-	om2p-hsv2 | \
-	om2p-lc | \
-	om5p | \
-	om5p-an)
-		platform_check_image_openmesh "$magic_long" "$1" && return 0
-		return 1
-		;;
-
-	antminer-s1 | \
-	antminer-s3 | \
-	archer-c5 | \
-	archer-c7 | \
-	el-m150 | \
-	el-mini | \
-	gl-inet | \
-	mc-mac1200r | \
-	minibox-v1 |\
-	onion-omega | \
-	oolite | \
-	smart-300 | \
-	tl-mr10u | \
-	tl-mr11u | \
-	tl-mr12u | \
-	tl-mr13u | \
-	tl-mr3020 | \
-	tl-mr3040 | \
-	tl-mr3040-v2 | \
-	tl-mr3220 | \
-	tl-mr3220-v2 | \
-	tl-mr3420 | \
-	tl-mr3420-v2 | \
-	tl-wa701nd-v2 | \
-	tl-wa7210n-v2 | \
-	tl-wa7510n | \
-	tl-wa750re | \
-	tl-wa850re | \
-	tl-wa860re | \
-	tl-wa801nd-v2 | \
-	tl-wa901nd | \
-	tl-wa901nd-v2 | \
-	tl-wa901nd-v3 | \
-	tl-wdr3500 | \
-	tl-wdr4300 | \
-	tl-wdr4900-v2 | \
-	tl-wr703n | \
-	tl-wr710n | \
-	tl-wr720n-v3 | \
-	tl-wr741nd | \
-	tl-wr741nd-v4 | \
-	tl-wr841n-v1 | \
-	tl-wa830re-v2 | \
-	tl-wr841n-v7 | \
-	tl-wr841n-v8 | \
-	tl-wr841n-v9 | \
-	tl-wr842n-v2 | \
-	tl-wr941nd | \
-	tl-wr941nd-v5 | \
-	tl-wr1041n-v2 | \
-	tl-wr1043nd | \
-	tl-wr1043nd-v2 | \
-	tl-wr2543n)
-		[ "$magic" != "0100" ] && {
-			echo "Invalid image type."
-			return 1
-		}
-
-		local hwid
-		local imageid
-
-		hwid=$(tplink_get_hwid)
-		imageid=$(tplink_get_image_hwid "$1")
-
-		[ "$hwid" != "$imageid" ] && {
-			echo "Invalid image, hardware ID mismatch, hw:$hwid image:$imageid."
-			return 1
-		}
-
-		local boot_size
-
-		boot_size=$(tplink_get_image_boot_size "$1")
-		[ "$boot_size" != "00000000" ] && {
-			echo "Invalid image, it contains a bootloader."
-			return 1
-		}
-
-		return 0
-		;;
-
-	tube2h)
-		alfa_check_image "$1" && return 0
-		return 1
-		;;
-
-	unifi-outdoor-plus | \
-	uap-pro)
-		[ "$magic_long" != "19852003" ] && {
-			echo "Invalid image type."
-			return 1
-		}
-		return 0
-		;;
-	wndr3700 | \
-	wnr2000-v3 | \
-	wnr612-v2 | \
-	wnr1000-v2)
-		local hw_magic
-
-		hw_magic="$(ar71xx_get_mtd_part_magic firmware)"
-		[ "$magic_long" != "$hw_magic" ] && {
-			echo "Invalid image, hardware ID mismatch, hw:$hw_magic image:$magic_long."
-			return 1
-		}
-		return 0
-		;;
-	nbg6716 | \
-	r6100 | \
-	wndr3700v4 | \
-	wndr4300 )
-		nand_do_platform_check $board $1
-		return $?;
-		;;
-	routerstation | \
-	routerstation-pro | \
-	ls-sr71 | \
-	pb42 | \
-	pb44 | \
-	all0305 | \
-	eap300v2 | \
-	eap7660d | \
-	ja76pf | \
-	ja76pf2 | \
-	jwap003 | \
-	wp543 | \
-	wpe72)
-		[ "$magic" != "4349" ] && {
-			echo "Invalid image. Use *-sysupgrade.bin files on this board"
-			return 1
-		}
-
-		local md5_img=$(dd if="$1" bs=2 skip=9 count=16 2>/dev/null)
-		local md5_chk=$(dd if="$1" bs=$CI_BLKSZ skip=1 2>/dev/null | md5sum -); md5_chk="${md5_chk%% *}"
-
-		if [ -n "$md5_img" -a -n "$md5_chk" ] && [ "$md5_img" = "$md5_chk" ]; then
-			return 0
-		else
-			echo "Invalid image. Contents do not match checksum (image:$md5_img calculated:$md5_chk)"
-			return 1
-		fi
-		return 0
-		;;
-	wnr2000-v4)
-		[ "$magic_long" != "32303034" ] && {
-			echo "Invalid image type."
-			return 1
-		}
-		return 0
-		;;
-	wnr2200)
-                [ "$magic_long" != "32323030" ] && {
-                        echo "Invalid image type."
-                        return 1
-                }
-                return 0
-                ;;
-
-	esac
-
-	echo "Sysupgrade is not yet supported on $board."
-	return 1
+# Debug function to dump image info
+debug_image_info() {
+    local image="$1"
+    echo "========== IMAGE DEBUG INFO ==========" > /dev/console
+    echo "Image path: $image" > /dev/console
+    echo "Image size: $(stat -c%s "$image" 2>/dev/null) bytes" > /dev/console
+    echo "File type: $(file "$image" 2>/dev/null)" > /dev/console
+    echo "First 32 bytes (hex):" > /dev/console
+    dd if="$image" bs=1 count=32 2>/dev/null | hexdump -C > /dev/console
+    echo "Searching for 'hsqs':" > /dev/console
+    hexdump -C "$image" | grep -i "hsqs" | head -5 > /dev/console
+    echo "Searching for 'SQUASHFS':" > /dev/console
+    strings "$image" | grep -i squash | head -5 > /dev/console
+    echo "=====================================" > /dev/console
 }
 
 
+platform_check_image() {
+	local board="unknown"
+	
+	if [ -f "/proc/zyxel/mrd_product_name" ]; then
+		local zyxel_model=$(cat /proc/zyxel/mrd_product_name 2>/dev/null | tr 'A-Z' 'a-z')
+		if [ "$zyxel_model" = "ex3301-t0" ] || [ "$zyxel_model" = "dx3310-t0" ]; then
+			board="ex3301-t0"
+		fi
+	fi
 
-
-platform_pre_upgrade() {
-	local board=$(ar71xx_board_name)
+	[ "$#" -gt 1 ] && return 1
 
 	case "$board" in
-	nbg6716 | \
-	r6100 | \
-	wndr3700v4 | \
-	wndr4300 )
-		nand_do_upgrade "$1"
+	"ex3301-t0")
+		if [ -f "/tmp/force_matrix" ]; then return 0; fi
+
+		local magic=$(dd if="$1" bs=1 count=4 2>/dev/null)
+		if [ "$magic" != "2RDH" ]; then
+			echo "Upgrade Aborted: Missing Zyxel HDR2 signature." > /dev/console
+			return 1
+		fi
+
+		if ! tail -c 1048576 "$1" 2>/dev/null | strings | grep -q "majad"; then
+			echo "FATAL: OFFICIAL ZYXEL FIRMWARE DETECTED. Use TFTP Recovery." > /dev/console
+			#return 1
+		fi
+		
+		return 0
+		;;
+
+	all0315n | all0258n | cap4200ag)
+		platform_check_image_allnet "$1" && return 0
+		return 1
+		;;
+	*)
+		return 1
 		;;
 	esac
 }
 
 platform_do_upgrade() {
-	local board=$(ar71xx_board_name)
+	local board="unknown"
+	
+	local magic=$(dd if="$1" bs=1 count=4 2>/dev/null)
+	if [ "$magic" = "2RDH" ]; then
+		board="ex3301-t0"
+	fi
 
 	case "$board" in
-	routerstation | \
-	routerstation-pro | \
-	ls-sr71 | \
-	all0305 | \
-	eap7660d | \
-	pb42 | \
-	pb44 | \
-	ja76pf | \
-	ja76pf2 | \
-	jwap003)
-		platform_do_upgrade_combined "$ARGV"
+	"ex3301-t0")
+		echo "Matrix OS upgrade initiated..." > /dev/console
+		
+		local bootflag=$(cat /proc/tc3162/gpon_bootflag 2>/dev/null)
+		local target=""
+		
+		if [ "$bootflag" = "1" ]; then
+			target="tclinux_slave"
+			echo "Active Bank: 2..." > /dev/console
+		else
+			target="tclinux"
+			echo "Active Bank: 1..." > /dev/console
+		fi
+		
+		echo 1 > /proc/tc3162/pwm_start 2>/dev/null
+		echo "80 8 1 0 0" > /proc/tc3162/led_def 2>/dev/null
+		echo "82 6 1 0 1" > /proc/tc3162/led_def 2>/dev/null
+		echo 0 > /proc/tc3162/led_pwr_red 2>/dev/null
+		rm /overlay/.reset
+		echo "Verifying firmware header..." > /dev/console
+		local hdr_check=$(dd if="$1" bs=1 count=4 2>/dev/null)
+		if [ "$hdr_check" != "2RDH" ]; then
+			echo "FATAL: Invalid firmware - missing 2RDH header" > /dev/console
+			return 1
+		fi
+		echo "Valid signature found" > /dev/console
+
+		echo "Flashing ..." > /dev/console
+		
+		if ! mtd erase "$target"; then
+			echo "ERROR: Failed to erase $target" > /dev/console
+			touch /overlay/.reset
+			return 1
+		fi
+		
+		if ! mtd write "$1" "$target"; then
+			echo "ERROR: Failed to write firmware to $target" > /dev/console
+			touch /overlay/.reset
+			return 1
+		fi
+		
+		echo "Flash complete. Rebooting..." > /dev/console
+		sleep 2
+		reboot -f
+		return 0
 		;;
-	wp543|\
-	wpe72)
-		platform_do_upgrade_compex "$ARGV"
-		;;
-	all0258n )
-		platform_do_upgrade_allnet "0x9f050000" "$ARGV"
-		;;
-	all0315n )
-		platform_do_upgrade_allnet "0x9f080000" "$ARGV"
-		;;
-	eap300v2 |\
-	cap4200ag)
-		platform_do_upgrade_allnet "0xbf0a0000" "$ARGV"
-		;;
-	dir-825-b1 |\
-	tew-673gru)
-		platform_do_upgrade_dir825b "$ARGV"
-		;;
-	mr600 | \
-	mr600v2 | \
-	mr900 | \
-	mr900v2 | \
-	om2p | \
-	om2pv2 | \
-	om2p-hs | \
-	om2p-hsv2 | \
-	om2p-lc | \
-	om5p | \
-	om5p-an)
-		platform_do_upgrade_openmesh "$ARGV"
-		;;
-	unifi-outdoor-plus | \
-	uap-pro)
-		MTD_CONFIG_ARGS="-s 0x180000"
-		default_do_upgrade "$ARGV"
-		;;
+
 	*)
 		default_do_upgrade "$ARGV"
 		;;
 	esac
 }
+
 
 disable_watchdog() {
 	killall watchdog

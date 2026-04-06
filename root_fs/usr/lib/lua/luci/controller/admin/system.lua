@@ -1,6 +1,7 @@
 -- Copyright 2008 Steven Barth <steven@midlink.org>
 -- Copyright 2008-2011 Jo-Philipp Wich <jow@openwrt.org>
 -- Licensed to the public under the Apache License 2.0.
+-- Modified for XX3310 routers
 
 module("luci.controller.admin.system", package.seeall)
 
@@ -171,7 +172,7 @@ function action_flashops()
 	local fs  = require "nixio.fs"
 
 	local upgrade_avail = fs.access("/lib/upgrade/platform.sh")
-	local reset_avail   = os.execute([[grep '"rootfs_data"' /proc/mtd >/dev/null 2>&1]]) == 0
+	local reset_avail   = true
 
 	local restore_cmd = "tar -xzC/ >/dev/null 2>&1"
 	local backup_cmd  = "sysupgrade --create-backup - 2>/dev/null"
@@ -249,46 +250,50 @@ function action_flashops()
 		--
 		-- Initiate firmware flash
 		--
-		local step = tonumber(luci.http.formvalue("step") or 1)
+	local step = tonumber(luci.http.formvalue("step") or 1)
 		if step == 1 then
 			if image_supported() then
+
+				local check_cmd = string.format("tail -c 1048576 %q 2>/dev/null | grep -q 'majad'", image_tmp)
+				local is_official = (luci.sys.call(check_cmd) ~= 0)
+
 				luci.template.render("admin_system/upgrade", {
-					checksum = image_checksum(),
-					storage  = storage_size(),
-					size     = (fs.stat(image_tmp, "size") or 0),
-					keep     = (not not luci.http.formvalue("keep"))
+					checksum    = image_checksum(),
+					storage     = storage_size(),
+					size        = (nixio.fs.stat(image_tmp, "size") or 0),
+					keep        = (not not luci.http.formvalue("keep")),
+					is_official = is_official
 				})
 			else
-				fs.unlink(image_tmp)
+				nixio.fs.unlink(image_tmp)
 				luci.template.render("admin_system/flashops", {
 					reset_avail   = reset_avail,
 					upgrade_avail = upgrade_avail,
 					image_invalid = true
 				})
-			end
-		--
-		-- Start sysupgrade flash
-		--
+			end		--
 		elseif step == 2 then
 			local keep = (luci.http.formvalue("keep") == "1") and "" or "-n"
 			luci.template.render("admin_system/applyreboot", {
 				title = luci.i18n.translate("Flashing..."),
-				msg   = luci.i18n.translate("The system is flashing now.<br /> DO NOT POWER OFF THE DEVICE!<br /> Wait a few minutes before you try to reconnect. It might be necessary to renew the address of your computer to reach the device again, depending on your settings."),
+				msg   = luci.i18n.translate("The system is flashing now.<br /> DO NOT POWER OFF THE DEVICE WHILE POWER LED IS RED <br /> Wait about two minutes before you try to reconnect. It might be necessary to renew the address of your computer to reach the device again, depending on your settings."),
 				addr  = (#keep > 0) and "192.168.1.1" or nil
 			})
 			fork_exec("killall dropbear uhttpd; sleep 1; /sbin/sysupgrade %s %q" %{ keep, image_tmp })
 		end
 	elseif reset_avail and luci.http.formvalue("reset") then
 		--
-		-- Reset system
+		-- Reset system (MATRIX OS)
 		--
 		luci.template.render("admin_system/applyreboot", {
 			title = luci.i18n.translate("Erasing..."),
-			msg   = luci.i18n.translate("The system is erasing the configuration partition now and will reboot itself when finished."),
+			msg   = luci.i18n.translate("The system is performing a Matrix OS Factory Reset and will reboot itself when finished."),
 			addr  = "192.168.1.1"
 		})
-		fork_exec("killall dropbear uhttpd; sleep 1; mtd -r erase rootfs_data")
-	else
+		-- Deletes the overlay file and reboots
+		fork_exec("killall dropbear uhttpd; rm -f /overlay/.reset; reboot")
+
+		else
 		--
 		-- Overview
 		--
