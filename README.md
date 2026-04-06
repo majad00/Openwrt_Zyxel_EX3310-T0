@@ -4,8 +4,9 @@
 [![Release](https://img.shields.io/github/v/release/yourusername/zyxel-matrix-wsr30)](https://github.com/majad00/zyxel-matrix/releases/tag/v4.0.0)
 [![Downloads](https://img.shields.io/github/downloads/yourusername/zyxel-matrix-wsr30/total)](https://github.com/majad00/wsr30-openwrt/releases/download/v4.0.0/Zyxel-Matrix-WSR30-v4.1.zip)
 
-The Zyxel-Matrix, Functional Openwrt Port for DX EX-3301 is developed using Imagebuilder, integrates proprietary utilities that are already available on your router. The open-source components are distributed under the GPL V2 license. 
-👉 Most of the proprietary utilities will remain accessible even after transitioning to the Zyxel-Matrix. Users have the flexibility to revert to their original router status at any time. Also, updating to the latest Zyxel firmware is possible through LUCI interface of Zyxel-Matrix.
+The Zyxel-Matrix, Functional Openwrt Port for DX EX-3301 is developed using Imagebuilder,around the integrates proprietary utilities that are already available on your router. The open-source components are distributed under the GPL V2 license. 
+👉 Most of the proprietary utilities will remain accessible even after transitioning to the Zyxel-Matrix.
+👉 You have the flexibility to revert to original router status at any time by using Rollback firmware. Also, updating to the latest Zyxel firmware is possible through LUCI interface in Zyxel-Matrix.
 
 
 ## ✨ Features
@@ -33,15 +34,14 @@ The download includes:
 ## 🚀 Flashing in 2 minutes
 
 1. **Connect** Ethernet cable from PC to router
-2. **Set IP** on PC to `192.168.1.10`
-3. **Login to router**: Login to your Zyxel router through web
-4. **Run Loader**: From drop down menu Select Maintenance → click Firmware Upgrade
+2. **Login to router**: Login to your Zyxel router through web
+4. **Flash**: From drop down menu Select Maintenance → click Firmware Upgrade
 5. **Wait** 2-3 minutes for first boot
-6. **Connect WiFi**: `Zyxel_Matrix` / `12345678` ( disable by default)
+6. **Connect WiFi**: `Zyxel_Matrix` / `12345678` ( Enable through LUCI if needed)
 7. **Configure**: http://192.168.1.1 (root/no passwrod)
 
-> ⚠️ **IMPORTANT**: Change password immediately after first boot!
->⚠️ **IMPORTANT**: After flashing Zyxel-Matrix, please reset to make sure previous Zyxel settings removed
+> ⚠️ **IMPORTANT**: Change password after first boot!, on successfull boot the power LED will blink RED for a second
+> ⚠️ **Optional**: After flashing Zyxel-Matrix, please reset to make sure previous Zyxel settings removed
 
 ## 📋 Detailed Documentation
 
