@@ -10,7 +10,7 @@ The Zyxel-Matrix, Functional Openwrt Port for DX EX-3301 is developed using Imag
 
 
 ## ✨ Features 
-⚠️ **IMPORTANT**:CURRENT RELEASE IS IN TEST PHASE SO PLEASE INSTALL ONLY IF YOU HAVE UART CONNECTION
+⚠️ **IMPORTANT**:CURRENT RELEASE IS IN TEST PHASE
 
 - **Easy Installation** - No UART or disassembly required! Install from Web interface
 - **MSSID** - Router support Multiple SSIDs
@@ -32,17 +32,23 @@ The download includes:
 - `CHANGELOG.txt` - Version history
 - `docs` - for detail documentations and installation
   
-## 🚀 Flashing in 2 minutes (for test release it is advice to use UART connection)
+## 🚀 Flashing in 2 minutes (for test release it is advice to use UART connection as backup)
 
 1. **Connect** Ethernet cable from PC to router
 2. **Login to router**: Login to your Zyxel router through web
-4. **Flash**: From drop down menu Select Maintenance → click Firmware Upgrade
-5. **Wait** 2-3 minutes for first boot
-6. **Connect WiFi**: `Zyxel_Matrix` / `12345678` ( Enable through LUCI if needed)
-7. **Configure**: http://192.168.1.1 (root/no passwrod)
+3. **Flash**: From drop down menu Select Maintenance → click Firmware Upgrade
+4. **Wait** 2-3 minutes for first boot
+5. **Connect WiFi**: `Zyxel_Matrix` / `12345678` ( Enable through LUCI)
+6. **Configure**: http://192.168.1.1 (root/no passwrod)
 
 > ⚠️ **IMPORTANT**: Change password after first boot!, on successfull boot the power LED will blink RED for a second
 > ⚠️ **Optional**: After flashing Zyxel-Matrix, please reset to make sure previous Zyxel settings removed
+
+## 🚀 Flashing using UART 
+1. **Connect** Using TX, RX and GND, rename the firmware to RAS.bin (optional)
+2. **Get to Shell**: Intrupt boot process by pressing any button, rename the firmware 
+3. **Flash**: ATUR RAS.bin ( router will start a tftp server and wait for the file), send that RAS.bin file using TFTP.
+4. **Wait** Bootloader will take file and write to proper offsets, router will reboot, wait for 2-3 minutes for first boot
 
 ## 📋 Detailed Documentation
 
