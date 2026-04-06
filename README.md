@@ -32,7 +32,7 @@ The download includes:
 - `CHANGELOG.txt` - Version history
 - `docs` - for detail documentations and installation
   
-## 🚀 Flashing in 2 minutes (for test release it is advice to use UART connection as backup)
+## 🚀 Flashing in 2 minutes 
 
 1. **Connect** Ethernet cable from PC to router
 2. **Login to router**: Login to your Zyxel router through web
@@ -44,7 +44,7 @@ The download includes:
 > ⚠️ **IMPORTANT**: Change password after first boot!, on successfull boot the power LED will blink RED for a second
 > ⚠️ **Optional**: After flashing Zyxel-Matrix, please reset to make sure previous Zyxel settings removed
 
-## 🚀 Flashing using UART 
+## 🚀 Flashing using UART (safe for testing release)
 1. **Connect** Using TX, RX and GND, rename the firmware to RAS.bin (optional)
 2. **Get to Shell**: Intrupt boot process by pressing any button, rename the firmware 
 3. **Flash**: ATUR RAS.bin ( router will start a tftp server and wait for the file), send that RAS.bin file using TFTP.
