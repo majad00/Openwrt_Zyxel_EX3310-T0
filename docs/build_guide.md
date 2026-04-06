@@ -1,6 +1,75 @@
 # Building Zyxel-Matrix Hybrid Firmware
 
-## HOW WE BUILD
+## Build Application
+To build application for router you need to cross compile from source.
+
+
+## 🔧 Cross-Compilation Guide
+
+### Setting Up the Build Environment
+
+
+cd ./xx3301
+
+# Set SDK path
+export SDK_PATH=./xx3301
+
+# Add toolchain to PATH
+export PATH=$PATH:$SDK_PATH/staging_dir/toolchain-mips_34kc_gcc-4.8-linaro_uClibc-0.9.33.2/bin
+
+# Set cross-compilation variables
+export CROSS_COMPILE=mips-openwrt-linux-uclibc-
+export STAGING_DIR=$SDK_PATH/staging_dir
+
+# Set library paths
+export LDFLAGS="-L$STAGING_DIR/target-mips_34kc_uClibc-0.9.33.2/usr/lib"
+export CPPFLAGS="-I$STAGING_DIR/target-mips_34kc_uClibc-0.9.33.2/usr/include"
+
+# Set compiler
+export CC="mips-openwrt-linux-uclibc-gcc"
+export CFLAGS="-march=mips32r2 -msoft-float"
+export LDFLAGS="-static"
+
+# Compile
+mips-openwrt-linux-uclibc-gcc \
+    -march=mips32r2 \
+    -msoft-float \
+    -static \
+    source.c -o binary_name
+
+# Example
+# Create a test program
+cat > hello.c << EOF
+#include <stdio.h>
+int main() {
+    printf("Hello from Zyxel-Matrix!\n");
+    return 0;
+}
+EOF
+
+# Compile for the router
+mips-openwrt-linux-uclibc-gcc \
+    -march=mips32r2 \
+    -msoft-float \
+    -static \
+    hello.c -o hello_router
+
+# Check the compiled binary
+file hello_router
+ Output: hello_router: ELF 32-bit MSB executable, MIPS, MIPS32 rel2 version 1
+
+# Compiling Example with additional include and library paths
+mips-openwrt-linux-uclibc-gcc \
+    -march=mips32r2 \
+    -msoft-float \
+    -static \
+    -I/path/to/includes \
+    -L/path/to/libraries \
+    -lmylib \
+    source.c -o binary_name
+
+
+## Build The router Rootfs
 The approach to build Openwrt is quite different than main stream Openwrt workflow.
 To build firmware for the Zyxel EX3301-T0 / DX3310-T0 routers, two main components need to work together:
 
@@ -27,20 +96,46 @@ We can **change, create, modify, or add new software** only within the root file
 
 ## Tools Required
 
-To compile the rootfs for installation, you need tools that can:
+Due to GitHub size limitations, large files are hosted externally. The following source files are required for building:
 
-1. **Edit** the current filesystem
-2. **Pack** it into a flashable format
-3. **Merge** components together
-4. **Sign** it with Zyxel-compatible signatures
-5. **Verify** offsets match NAND layout, kernel, and bootloader expectations
+### Required Source Files
 
-### Tool Features
+| File | Description |
+|------|-------------|
+| `OpenWrt-ImageBuilder-15.05.1-ar71xx-generic.Linux-x86_64.tar.bz2` | OpenWrt Image Builder (137 MB) |
+| `OpenWrt-SDK-15.05.1-ar71xx-generic_gcc-4.8-linaro_uClibc-0.9.33.2.Linux-x86_64.tar.bz2` | OpenWrt SDK (75 MB) |
+| `busybox-1.36.1.tar.bz2` | BusyBox utilities |
+| `squashfs4.2.tar.gz` | SquashFS tools |
+
+### Download Links
+
+- [OpenWrt ImageBuilder](https://downloads.openwrt.org/releases/15.05.1/) (or use your own copy)
+- [OpenWrt SDK](https://downloads.openwrt.org/releases/15.05.1/)
+- [BusyBox](https://busybox.net/downloads/)
+- [SquashFS](https://github.com/plougher/squashfs-tools)
+
+## 🏗️ Building from Source
+
+### Important Notice
+
+> **Rootfs is the only part of the firmware that can be built with open-source code.** The remaining components are proprietary and not shared in repo , except if you want to use them you have to install firmware.
+
+### Build Process
+
+1. Download the required source files listed above
+2. Place them in the `source/` directory
+3. Make changes to code
+4. Use cross compile guide to add utilities
+5. Use the PandC-v12 to sign the firmware
+
+### PandC-v12 Features
 
 - Manages signing and packing process
 - Ensures proper offsets for NAND layout
 - Handles kernel and bootloader expectations
+- Add kernel to the rootfs
 - Applies required proprietary signatures
+
 
 ## Target Chipset
 
@@ -51,58 +146,6 @@ The tools will work specifically with:
 | **Chipset** | MediaTek/Airoha EN751627 |
 | **Target Routers** | Zyxel EX3301-T0, Zyxel DX3310-T0 |
 
-## Hardware Specifications
-
-### Zyxel EX3301-T0 / DX3310-T0
-
-| Feature | Specification |
-|---------|---------------|
-| **Model** | Zyxel EX3301-T0 / DX3310-T0 |
-| **Device Mode** | Router |
-| **SoC / CPU** | MediaTek/Airoha EN751627 |
-| **RAM** | 256 MB DDR3 (1333 MHz) |
-| **Flash Memory** | 128 MB SPI NAND (Winbond W25N01G) |
-| **2.4GHz WLAN** | MediaTek MT7915D |
-| **5GHz WLAN** | MediaTek MT7915E |
-| **Ethernet Switch** | 4 LAN ports + WAN support |
-| **USB Ports** | Yes (usb1, usb2 instances) |
-| **VoIP / Telephony** | Silicon Labs Si32280 SLIC (2 FXS channels) |
-| **Stock Firmware** | V5.50(ABVY.6.2)C0 |
-| **Stock Kernel** | Linux 3.18.21 |
-
-
-#### Wi-Fi Interface Mapping
-The bootlog uses standard Ralink/MediaTek interface naming:
-
-| Band | Interfaces |
-|------|------------|
-| **2.4 GHz** | ra0, ra1, ra2, ra3 |
-| **5 GHz** | rai0, rai1, rai2, rai3, rai4, rai5 |
-
-#### Telephony Configuration
-- DSP Driver: Silicon Labs Si32280
-- Default VoIP Country/Region: ID 27 (Norway)
-
-## Building Status
-
-| Phase | Status |
-|-------|--------|
-| **Testing Phase** | 🔄 In Progress |
-| **Building Tools** | 🟡 Coming Soon |
-| **Source Release** | 📦 After test phase |
-
-## Building from Working Source
-
-> **Building from working source will come soon after the test phase is over.**
-
-The tools will be made public after the full product release, as the product is currently in the testing phase.
-
-## Quick Links
-
-- [Main README](README.md)
-- [Installation Guide](QUICK-START.txt)
-- [Legal Information](LEGAL.md)
-- [Changelog](CHANGELOG.txt)
 
 ## License
 

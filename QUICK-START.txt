@@ -2,10 +2,9 @@
 
 1. CONNECT: Ethernet cable from PC to router
 2. Login to router web page
-3. FLASH: flash through a Maintaince > Firmware update option
+3. FLASH: flash through OEM web page at Maintaince > Firmware update option
 4. WAIT: 2-3 minutes for first boot
-5. Router Power LED will become RED for two second when it is ready
-6. CONNECT: WiFi: Zyxel_Matrix / 12345678 ( Disable by default)
-7. LOGIN: http://192.168.1.1 (root/no password)
+5. Router Power LED will become RED for two second when it is ready, internet and radion leds will start flashing
+7. LOGIN: http://192.168.1.1 (root/no password or 1234)
 
 ⚠️ Change default passwords !

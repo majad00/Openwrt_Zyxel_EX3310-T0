@@ -1,4 +1,4 @@
-# Zyxel-Matrix for WSR30 (Zyxel Multy U AC2100)
+# Openwrt for  ZyXEL EX3301-T0 AX1800 Dual-band WiFi6 Router
 
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/yourusername/zyxel-matrix-wsr30)](https://github.com/majad00/DX-EX3310-T0_Openwrt_Hybrid/releases/tag/V-15)
