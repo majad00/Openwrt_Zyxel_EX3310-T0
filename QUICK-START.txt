@@ -7,4 +7,4 @@
 5. Router Power LED will become RED for two second when it is ready, internet and radion leds will start flashing
 7. LOGIN: http://192.168.1.1 (root/no password or 1234)
 
-⚠️ Change default passwords !
+⚠️ Change default passwords ! "1234"
