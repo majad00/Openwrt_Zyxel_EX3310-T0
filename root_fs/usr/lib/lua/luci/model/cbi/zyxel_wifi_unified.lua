@@ -1,4 +1,4 @@
-m = Map("wireless", "Smart Connect (Unified Wi-Fi)", "Apply the exact same Network Name and Password to both 2.4 GHz and 5 GHz bands simultaneously.")
+m = Map("wireless", "Smart Connect (Combined)", "Combine both Main 2.4 GHz and Main 5 GHz, dont change their indivisual setting .")
 
 local iface2g = nil
 local iface5g = nil
