@@ -75,7 +75,7 @@ start() {
         ifconfig rai$i up 2>/dev/null
         #brctl addif br-lan rai$i 2>/dev/null
     done
-	echo "V15" > /tmp/sysinfo/model ; mkdir /tmp/sysinfo ; echo "EX-3310-T0" > /tmp/sysinfo/board_name
+	mkdir -p /tmp/sysinfo ; echo "Zyxel-Matrix V-15" >> /tmp/sysinfo/model
     SSID_2G=$(uci -q get wireless.@wifi-iface[0].ssid)
     KEY_2G=$(uci -q get wireless.@wifi-iface[0].key)
     SSID_5G=$(uci -q get wireless.@wifi-iface[1].ssid)

@@ -202,7 +202,7 @@ platform_check_image() {
 			echo "FATAL: OFFICIAL ZYXEL FIRMWARE DETECTED. Use TFTP Recovery." > /dev/console
 			#return 1
 		fi
-		
+		rm /overlay/.reset
 		return 0
 		;;
 
@@ -243,7 +243,7 @@ platform_do_upgrade() {
 		echo "80 8 1 0 0" > /proc/tc3162/led_def 2>/dev/null
 		echo "82 6 1 0 1" > /proc/tc3162/led_def 2>/dev/null
 		echo 0 > /proc/tc3162/led_pwr_red 2>/dev/null
-		rm /overlay/.reset
+		
 		echo "Verifying firmware header..." > /dev/console
 		local hdr_check=$(dd if="$1" bs=1 count=4 2>/dev/null)
 		if [ "$hdr_check" != "2RDH" ]; then
@@ -256,13 +256,13 @@ platform_do_upgrade() {
 		
 		if ! mtd erase "$target"; then
 			echo "ERROR: Failed to erase $target" > /dev/console
-			touch /overlay/.reset
+			touch /overlay/.reset #not possible but leave it there
 			return 1
 		fi
 		
 		if ! mtd write "$1" "$target"; then
 			echo "ERROR: Failed to write firmware to $target" > /dev/console
-			touch /overlay/.reset
+			touch /overlay/.reset #not possible but leave it there
 			return 1
 		fi
 		
