@@ -1,7 +1,0 @@
-i!/bin/sh
-# The ultimate ghost script - Replaces zhttpd
-# Provides a valid PID to the system but does nothing.
-
-while true; do
-    sleep 3600
-done

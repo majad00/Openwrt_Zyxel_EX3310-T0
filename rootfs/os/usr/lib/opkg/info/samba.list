@@ -1,5 +1,0 @@
-/var/samba/valid.dat
-/usr/sbin/smbpasswd
-/usr/sbin/smbd
-/var/samba/lowcase.dat
-/var/samba/upcase.dat

@@ -1,4 +1,0 @@
-#!/bin/sh
-[ -z "$IPKG_INSTROOT" ] || exit 0
-. /lib/functions.sh
-insert_modules nf_nat nf_nat_ipv4

@@ -1,3 +1,0 @@
-/etc/modules.d/20-usb-core
-/lib/modules/3.18.21/usbcore.ko
-/etc/modules-boot.d/20-usb-core
