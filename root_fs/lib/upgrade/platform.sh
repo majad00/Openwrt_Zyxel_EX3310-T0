@@ -157,12 +157,41 @@ alfa_check_image() {
 	return 0
 }
 
+
 platform_check_image() {
 	local board=$(ar71xx_board_name)
+	[ "$#" -gt 1 ] && return 1
+
+	local zyxel_magic=$(dd if="$1" bs=1 count=4 2>/dev/null | hexdump -v -e '1/1 "%02x"')
+	if [ "$zyxel_magic" != "32524448" ]; then
+		echo "Upgrade Aborted: Missing Zyxel HDR2 signature. Invalid image format." > /dev/console
+		return 1
+	fi
+
+	if ! tail -c 1048576 "$1" 2>/dev/null | strings | grep -q "majad"; then
+		
+
+		echo " " > /dev/console
+		echo "================================================================" > /dev/console
+		echo " WARNING: OFFICIAL ZYXEL FIRMWARE DETECTED" > /dev/console
+		echo "================================================================" > /dev/console
+		echo " Flashing this file will completely remove the Matrix OS and " > /dev/console
+		echo " restore the router to its factory original state." > /dev/console
+		echo " " > /dev/console
+		echo " I ACCEPT: If you accept this risk and wish to proceed, please" > /dev/console
+		echo " check the 'Force upgrade' box on the LuCI flash page and " > /dev/console
+		echo " upload the image again." > /dev/console
+		echo "================================================================" > /dev/console
+
+		return 1
+	fi
+
+
 	local magic="$(get_magic_word "$1")"
 	local magic_long="$(get_magic_long "$1")"
 
-	[ "$#" -gt 1 ] && return 1
+	case "$board" in
+	all0315n | \
 
 	case "$board" in
 	all0315n | \
@@ -467,6 +496,9 @@ platform_check_image() {
 	echo "Sysupgrade is not yet supported on $board."
 	return 1
 }
+
+
+
 
 platform_pre_upgrade() {
 	local board=$(ar71xx_board_name)

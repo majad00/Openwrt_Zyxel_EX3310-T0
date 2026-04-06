@@ -21,7 +21,8 @@ start() {
     rm -rf $ZYXEL_ROOT
     
     mkdir -p $ZYXEL_ROOT
-    mount -t tmpfs tmpfs $ZYXEL_ROOT
+    #mount -t tmpfs tmpfs $ZYXEL_ROOT
+	mount -o bind /tmp $ZYXEL_ROOT/tmp
     mkdir -p $ZYXEL_ROOT/bin $ZYXEL_ROOT/sbin $ZYXEL_ROOT/usr $ZYXEL_ROOT/lib $ZYXEL_ROOT/lib/modules $ZYXEL_ROOT/userfs $ZYXEL_ROOT/proc $ZYXEL_ROOT/sys $ZYXEL_ROOT/dev $ZYXEL_ROOT/tmp $ZYXEL_ROOT/etc $ZYXEL_ROOT/var $ZYXEL_ROOT/data
 
     mount -o bind /os/bin $ZYXEL_ROOT/bin
@@ -50,18 +51,20 @@ start() {
     dd if=/dev/mtd13 of=$ZYXEL_ROOT/etc/Wireless/RT2860AP/RT30xxEEPROM.bin bs=1 skip=172032 count=4096 2>/dev/null
     cp $ZYXEL_ROOT/etc/Wireless/RT2860AP/RT30xxEEPROM.bin $ZYXEL_ROOT/etc/Wireless/RT2860AP_AC/RT30xxEEPROM.bin 2>/dev/null
 
-    cp /os/data/RT2860AP_bak.dat $ZYXEL_ROOT/etc/Wireless/RT2860AP/RT2860AP.dat 2>/dev/null
-    cp /os/data/RT2860AP_AC_bak.dat $ZYXEL_ROOT/etc/Wireless/RT2860AP_AC/RT2860AP.dat 2>/dev/null
+    cp /data/RT2860AP_bak.dat $ZYXEL_ROOT/etc/Wireless/RT2860AP/RT2860AP.dat 2>/dev/null
+    cp /data/RT2860AP_AC_bak.dat $ZYXEL_ROOT/etc/Wireless/RT2860AP_AC/RT2860AP.dat 2>/dev/null
 
     echo "MacAddress=7C:77:16:EC:E8:40" >> $ZYXEL_ROOT/etc/Wireless/RT2860AP/RT2860AP.dat
     echo "E2pPhiBinPath=/etc/Wireless/RT2860AP/RT30xxEEPROM.bin" >> $ZYXEL_ROOT/etc/Wireless/RT2860AP/RT2860AP.dat
     echo "MacAddress=7C:77:16:EC:E8:41" >> $ZYXEL_ROOT/etc/Wireless/RT2860AP_AC/RT2860AP.dat
     echo "E2pPhiBinPath=/etc/Wireless/RT2860AP_AC/RT30xxEEPROM.bin" >> $ZYXEL_ROOT/etc/Wireless/RT2860AP_AC/RT2860AP.dat
 
-    rm -rf /etc/Wireless 2>/dev/null
-    mkdir -p /etc/Wireless
-    mount -o bind $ZYXEL_ROOT/etc/Wireless /etc/Wireless
-
+    #rm -rf /etc/Wireless 2>/dev/null
+    #mkdir -p /etc/Wireless
+    #mount -o bind $ZYXEL_ROOT/etc/Wireless /etc/Wireless
+	rm -rf /etc/Wireless 2>/dev/null
+	ln -s $ZYXEL_ROOT/etc/Wireless /etc/Wireless
+	
     echo "=== [4/4] Launching Matrix Ecosystem ===" > /dev/console
     
     insmod /lib/modules/3.18.21/tcledctrl.ko 2>/dev/null

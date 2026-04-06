@@ -92,19 +92,21 @@ start() {
     KEY_5G=$(uci -q get wireless.@wifi-iface[1].key)
 
 
-   #chroot /tmp/zyxel_root/ usr/sbin/iwpriv ra0 set EncrypType="AES"
-     #chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set AuthMode="$ENC_5G"
-    #chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set AuthMode="WPAPSKWPA2PSK"
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set WPAPSK="$KEY_2G"
- #   chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set WPAPSK="$KEY_5G"
-        #last
+   chroot /tmp/zyxel_root/ usr/sbin/iwpriv ra0 set EncrypType=AES
+   chroot /tmp/zyxel_root /usr/sbin/iwpriv rai5 set AuthMode=WPA2PSK
+    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set AuthMode=WPA2PSK
+   chroot /tmp/zyxel_root /usr/sbin/iwpriv rai5 set WPAPSK=AES
+	chroot /tmp/zyxel_root /usr/sbin/iwpriv rai5 set WPAPSK="$KEY_5G"
+	chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set WPAPSK="$KEY_2G"
+	 #last
     chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set SSID="$SSID_2G"
-#       chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set SSID="$SSID_5G"
+    chroot /tmp/zyxel_root /usr/sbin/iwpriv rai5 set SSID="$SSID_5G"
 
    #wrappers dont uncomment they are for backup it can make chaoes
 	#/usr/bin/zyxel_wifi_sync & moved to hook
 	# /usr/bin/t_watch.sh & moved to startup
 	#/usr/sbin/wifi_watcher & dont need
+	
 	/usr/bin/zyxel_button_handler &
    #/etc/init.d/network restart
    #/etc/init.d/firewall restart
@@ -125,14 +127,14 @@ start() {
        if [ -n "$LAN_NET" ]; then
                 #chroot /tmp/zyxel_root /usr/sbin/iptables -t nat -A POSTROUTING -s $LAN_NET -o nas10 -j MASQUERADE
 				/etc/init.d/network restart
-				echo -n " > > System Ready! "
+				echo -n " > > System Ready! " ;echo "80 8 1 0 0" > /proc/tc3162/led_def ;		echo "82 6 1 0 1" > /proc/tc3162/led_def
        fi
+	    echo 0 > /proc/tc3162/led_pwr_red ; sleep 5 ;		echo 1 > /proc/tc3162/led_pwr_red
         chroot /tmp/zyxel_root /usr/sbin/iptables -t nat -A POSTROUTING -o nas10 -j MASQUERADE
         chroot /tmp/zyxel_root /usr/sbin/iptables -P INPUT ACCEPT
         chroot /tmp/zyxel_root /usr/sbin/iptables -I INPUT -p udp --dport 53 -j ACCEPT
         chroot /tmp/zyxel_root /usr/sbin/iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
         chroot /tmp/zyxel_root /usr/sbin/iptables -P FORWARD ACCEPT
-        sleep 3
         echo "nameserver 8.8.8.8" > /etc/resolv.conf
 		/usr/sbin/dnsmasq -u root -S 8.8.8.8 -S 8.8.4.4
 		

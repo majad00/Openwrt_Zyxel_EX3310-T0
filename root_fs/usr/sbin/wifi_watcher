@@ -2,7 +2,7 @@
 # written by majad as part of wrapper
 
 CONFIG="/etc/config/wireless"
-SYNC_SCRIPT="/usr/sbin/zyxel_wifi_sync"
+SYNC_SCRIPT="/usr/bin/zyxel_wifi_sync"
 
 # Get the exact timestamp of when the file was last modified
 LAST_MOD=$(stat -c %Y "$CONFIG" 2>/dev/null)

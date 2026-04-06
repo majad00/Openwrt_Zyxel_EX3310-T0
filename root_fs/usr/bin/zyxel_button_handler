@@ -1,33 +1,123 @@
 #!/bin/sh
-# Written by Majad qureshi as part of wrapper
 
-logger -t BTN_HANDLER "Zyxel Hardware Button Handler Started"
+# written by majad qureshi - OPTIMIZED FOR LOW CPU
+
+
+
+insmod /lib/modules/3.18.21/pwm.ko 2>/dev/null
+
+insmod /lib/modules/3.18.21/tcledctrl.ko 2>/dev/null
+
+insmod /lib/modules/3.18.21/zyinetled.ko 2>/dev/null
+
+echo 1 > /proc/tc3162/pwm_start
+
+
+
+killall -9 fwwatcher zcmd zcfg_be 2>/dev/null
+
+
+
+echo "80 8 1 0 1" > /proc/tc3162/led_def
+
+echo "82 6 1 0 1" > /proc/tc3162/led_def
+
+echo "33 4 1 0 1" > /proc/tc3162/led_def
+
+echo "84 3 1 0 1" > /proc/tc3162/led_def
+
+echo "13 21 1 0 1" > /proc/tc3162/led_def
+
+
+
+echo "56 0 5 0 0" > /proc/tc3162/led_def
+
+
 
 while true; do
-    read -r RAW_COUNT < /proc/tc3162/reset_button 2>/dev/null
-    COUNT=${RAW_COUNT%% *}
-    COUNT=${COUNT:-0}
 
-    if [ "$COUNT" -eq 1 ]; then
-        logger -t BTN_HANDLER "Button Event: Pressed"
-        BUTTON=reset ACTION=pressed /sbin/hotplug-call button 2>/dev/null
     
-    elif [ "$COUNT" -ge 10 ]; then
-        logger -t BTN_HANDLER "Button Event: 10 Seconds Reached. Wiping Configuration..."
-        BUTTON=reset ACTION=released SEEN=10 /sbin/hotplug-call button 2>/dev/null
-        rm -f /overlay/.reset /.reset        
-        echo "80 8 1 0 0" > /proc/tc3162/led_def
-        echo "33 4 1 0 0" > /proc/tc3162/led_def
-        echo "82 6 1 0 1" > /proc/tc3162/led_def
-        echo "84 3 1 0 1" > /proc/tc3162/led_def
-        echo 1 > /proc/tc3162/led_pwr_green 2>/dev/null
-        echo 0 > /proc/tc3162/led_pwr_red 2>/dev/null
-        echo 0 > /proc/tc3162/led_internet_red 2>/dev/null
-        
+
+    read -r RAW_COUNT < /proc/tc3162/reset_button 2>/dev/null
+
+    COUNT=${RAW_COUNT%% *}  
+
+    COUNT=${COUNT:-0}       
+
+
+
+    if [ "$COUNT" -ge 10 ] 2>/dev/null; then
+
+        echo "RESET " > /dev/console
+
+        rm -f /overlay/.reset /.reset
+
+        echo 1 > /proc/tc3162/led_pwr_red 
+
+        echo 0 > /proc/tc3162/led_pwr_red 
+
+        echo 0 > /proc/tc3162/led_pwr_green
+
+        echo 1 > /proc/tc3162/led_pwr_red
+
+
+
         sync
+
         reboot
-        sleep 10 
+
         exit 0
+
     fi
-    sleep 1
+
+
+
+    ETH3_STATUS=$(ifconfig eth3 2>/dev/null)
+
+    case "$ETH3_STATUS" in
+
+        *"inet addr"*)
+
+            echo 0 > /proc/tc3162/led_internet       
+
+            echo 1 > /proc/tc3162/led_internet_red   
+
+            ;;
+
+        *)
+
+            echo 1 > /proc/tc3162/led_internet       
+
+            echo 0 > /proc/tc3162/led_internet_red   
+
+            ;;
+
+    esac
+
+ 
+
+
+
+    RA0_STATUS=$(ifconfig ra0 2>/dev/null)
+
+    case "$RA0_STATUS" in
+
+        *"UP "*)
+
+            echo 0 > /proc/tc3162/led_wlan
+
+            ;;
+
+        *)
+
+            echo 1 > /proc/tc3162/led_wlan
+
+            ;;
+
+    esac
+
+
+
+    sleep 3
+
 done

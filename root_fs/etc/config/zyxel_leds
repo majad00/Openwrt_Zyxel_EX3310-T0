@@ -4,7 +4,7 @@ config led 'power'
 
 config led 'internet'
         option name 'Internet LED'
-        option trigger 'netdev'
+        option trigger 'default-on'
 
 config led 'wifi2g'
         option name '2.4 GHz Wi-Fi LED'
