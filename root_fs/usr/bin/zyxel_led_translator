@@ -11,8 +11,6 @@ echo 1 > /proc/tc3162/pwm_start
 
 chroot /tmp/zyxel_root/ /usr/bin/sys led on >/dev/null 2>&1
 chroot /tmp/zyxel_root/ /usr/bin/sys led off >/dev/null 2>&1
-chroot /tmp/zyxel_root/ /usr/bin/sys led on >/dev/null 2>&1
-chroot /tmp/zyxel_root/ /usr/bin/sys led off >/dev/null 2>&1
 sleep 1
 
 while true; do

@@ -30,10 +30,11 @@ start() {
     mount -o bind /os/usr $ZYXEL_ROOT/usr
     mount -o bind /os/lib $ZYXEL_ROOT/lib
     mount -o bind /os/userfs $ZYXEL_ROOT/userfs
-	#uncomment this line to force manual data feeding
+	#uncomment this line to force manual data input
     #mount -o bind /os/data $ZYXEL_ROOT/data
 	mount -o bind /data $ZYXEL_ROOT/data
 	mount -o bind /lib/modules $ZYXEL_ROOT/lib/modules
+
 
     mkdir -p /tmp/z_etc_upper /tmp/z_etc_work
     mount -t overlay overlay -o lowerdir=/os/etc,upperdir=/tmp/z_etc_upper,workdir=/tmp/z_etc_work $ZYXEL_ROOT/etc
@@ -53,7 +54,7 @@ start() {
     cp /data/RT2860AP_bak.dat $ZYXEL_ROOT/etc/Wireless/RT2860AP/RT2860AP.dat 2>/dev/null
     cp /data/RT2860AP_AC_bak.dat $ZYXEL_ROOT/etc/Wireless/RT2860AP_AC/RT2860AP.dat 2>/dev/null
 
-   # echo "MacAddress=7C:77:16:EC:E8:40" >> $ZYXEL_ROOT/etc/Wireless/RT2860AP/RT2860AP.dat
+    #echo "MacAddress=7C:77:16:EC:E8:40" >> $ZYXEL_ROOT/etc/Wireless/RT2860AP/RT2860AP.dat
     echo "E2pPhiBinPath=/etc/Wireless/RT2860AP/RT30xxEEPROM.bin" >> $ZYXEL_ROOT/etc/Wireless/RT2860AP/RT2860AP.dat
     #echo "MacAddress=7C:77:16:EC:E8:41" >> $ZYXEL_ROOT/etc/Wireless/RT2860AP_AC/RT2860AP.dat
     echo "E2pPhiBinPath=/etc/Wireless/RT2860AP_AC/RT30xxEEPROM.bin" >> $ZYXEL_ROOT/etc/Wireless/RT2860AP_AC/RT2860AP.dat
@@ -76,7 +77,7 @@ start() {
     chroot $ZYXEL_ROOT /bin/sh -c "export PATH=/home/bin:/home/scripts:/opt/bin:/bin:/sbin:/usr/bin:/usr/sbin:/userfs/bin; export LD_LIBRARY_PATH=/lib/public:/lib/private:/lib/gpl:/usr/lib:/lib:/lib64/gpl:/lib64; /etc/init.d/rcS start"
 
     echo -n "Matrix Initialization: [" > /dev/console
-    for i in $(seq 1 30); do
+    for i in $(seq 1 20); do
         echo -n " > " > /dev/console
         sleep 1
     done

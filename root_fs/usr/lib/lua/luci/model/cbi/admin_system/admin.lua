@@ -50,7 +50,7 @@ s.addremove = true
 
 
 ni = s:option(Value, "Interface", translate("Interface"),
-	translate("Listen only on the given interface or, if unspecified, on all"))
+	translate("If SSH fails on LAN, please select Unspecified "))
 
 ni.template    = "cbi/network_netlist"
 ni.nocreate    = true

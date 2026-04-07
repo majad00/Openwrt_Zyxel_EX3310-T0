@@ -1,4 +1,4 @@
-# Zyxel-Matrix for MediaTek/Airoha EN751627 based chips ( tested on DX-3301 and EX3301 Routers) 
+# Openwrt for MediaTek/Airoha EN751627 based chips ( tested on DX-3301 and EX3301 Routers) 
 
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/yourusername/zyxel-matrix-wsr30)](https://github.com/majad00/DX-EX3310-T0_Openwrt_Hybrid/releases/tag/V-15)
@@ -7,8 +7,6 @@
 The Zyxel-Matrix, Functional Openwrt Port for DX EX-3301 is developed using Imagebuilder,around the integrates proprietary utilities that are already available on your router. The open-source components are distributed under the GPL V2 license. 
 👉 Most of the proprietary utilities will remain accessible even after transitioning to the Zyxel-Matrix.
 👉 You have the flexibility to revert to original router status at any time by using Rollback firmware. Also, updating to the latest Zyxel firmware is possible through LUCI interface in Zyxel-Matrix.
-
-⚠️ **IMPORTANT**: User root have Password '1234' , added to prevent SSH bug
 
 ## ✨ Features 
 - **Easy Installation** - No UART or disassembly required! Install from Web interface
@@ -23,7 +21,7 @@ The Zyxel-Matrix, Functional Openwrt Port for DX EX-3301 is developed using Imag
 ## 📥 Quick Download
 
 👉 **[Download Latest Release](https://github.com/majad00/DX-EX3310-T0_Openwrt_Hybrid/releases/download/V-15/DX-EX3301-T0_Openwrt_Zyxel-Matrix-v-15.zip)**
-
+sha256:d576cdc73309a6c9ad63ccfaef6e9adcffd1f7fb3be36d792ce0cd82536057ed
 The download includes:
 - `openwrt-15.5-zyxel-matrix-v-15-squashfs-sysupgrade.bin` - Zyxel-Matrix for DX3301-T0 and EX3301-T0
 - `zyxel-3.3-squashfs-rollback.bin` - Roll Back to Zyxal factory firmware

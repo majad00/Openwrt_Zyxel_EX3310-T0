@@ -4,17 +4,18 @@ CHROOT_PATH="/tmp/zyxel_root"
 IWPRIV="/usr/sbin/iwpriv"
 
 # written by majad qureshi as part of wrapper
+# modified to dynamically support all Mediatek ra*/rai* interfaces
 sync_iface() {
     local config="$1"
-    local device ifname disabled ssid key encryption hidden macaddr maxassoc channel htmode txpower
+    local device ifname disabled ssid key encryption hidden macaddr maxassoc channel htmode txpower main_ifname
 
     config_get device "$config" device
     config_get ifname "$config" ifname
 
-    
+    # FIX 1: Dynamically grab the default interface name 
+    config_get main_ifname "$device" ifname
     if [ -z "$ifname" ]; then
-        [ "$device" = "radio0" ] && ifname="ra0"
-        [ "$device" = "radio1" ] && ifname="rai5"
+        ifname="$main_ifname"
     fi
 
     config_get disabled "$config" disabled "0"
@@ -26,14 +27,21 @@ sync_iface() {
     config_get maxassoc "$config" maxassoc "32"
 
     [ -z "$ifname" ] && return
+    
+    # FIX 2: Use wildcards 
     case "$ifname" in
-        ra0|ra1|ra2|rai5|rai1|rai2) ;;
+        ra*|rai*) ;;
         *) return ;;
     esac
 
- 
+    # FIX 3: Dynamically identify the main radio interface instead of hardcoding 'ra0' and 'rai5'
     local is_main=0
-    [ "$ifname" = "ra0" -o "$ifname" = "rai5" ] && is_main=1
+    [ "$ifname" = "$main_ifname" ] && is_main=1
+    
+    # Fallback just in case 
+    if [ -z "$main_ifname" ]; then
+        [ "$ifname" = "ra0" -o "$ifname" = "rai0" -o "$ifname" = "rai5" ] && is_main=1
+    fi
 
     ifconfig $ifname down 2>/dev/null
 
@@ -44,13 +52,13 @@ sync_iface() {
         ifconfig $ifname up 2>/dev/null
         chroot $CHROOT_PATH $IWPRIV $ifname set RadioOn=1 > /dev/null 2>&1
 
-
         if [ "$is_main" = "1" ]; then
             config_get channel "$device" channel "auto"
             config_get htmode "$device" htmode "0"
             config_get txpower "$device" txpower "100"
 
-            chroot $CHROOT_PATH $IWPRIV $ifname set BssidNum=4 > /dev/null 2>&1
+     
+            chroot $CHROOT_PATH $IWPRIV $ifname set BssidNum=8 > /dev/null 2>&1
 
             if [ "$channel" != "auto" ]; then
                 chroot $CHROOT_PATH $IWPRIV $ifname set AutoChannelSel=0 > /dev/null 2>&1
@@ -72,7 +80,6 @@ sync_iface() {
 
             chroot $CHROOT_PATH $IWPRIV $ifname set TxPower="$txpower" > /dev/null 2>&1
         fi
-
 
         chroot $CHROOT_PATH $IWPRIV $ifname set HideSSID="$hidden" > /dev/null 2>&1
         chroot $CHROOT_PATH $IWPRIV $ifname set MaxStaNum="$maxassoc" > /dev/null 2>&1

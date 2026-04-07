@@ -1,11 +1,19 @@
 #!/bin/sh /etc/rc.common
-START=99
-STOP=01
+
+START=15
+STOP=85
 
 start() {
-    exit 0
+    /usr/bin/zyxel_button_handler_ &
+    echo $! > /var/run/zyxel_button_handler.pid
 }
 
 stop() {
+    if [ -f /var/run/zyxel_button_handler.pid ]; then
+        kill $(cat /var/run/zyxel_button_handler.pid)
+        rm -f /var/run/zyxel_button_handler.pid
+    fi
+    
     /sbin/save_matrix
 }
+

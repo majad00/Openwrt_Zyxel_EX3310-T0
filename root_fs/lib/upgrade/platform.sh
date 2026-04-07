@@ -159,7 +159,7 @@ alfa_check_image() {
 }
 
 
-# Debug function to dump image info
+# Debug function to dump image info not implemented in production
 debug_image_info() {
     local image="$1"
     echo "========== IMAGE DEBUG INFO ==========" > /dev/console
@@ -197,12 +197,11 @@ platform_check_image() {
 			echo "Upgrade Aborted: Missing Zyxel HDR2 signature." > /dev/console
 			return 1
 		fi
-
+		rm /overlay/.reset
 		if ! tail -c 1048576 "$1" 2>/dev/null | strings | grep -q "majad"; then
 			echo "FATAL: OFFICIAL ZYXEL FIRMWARE DETECTED. Use TFTP Recovery." > /dev/console
 			#return 1
 		fi
-		rm /overlay/.reset
 		return 0
 		;;
 
