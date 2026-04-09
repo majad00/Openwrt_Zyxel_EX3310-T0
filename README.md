@@ -8,7 +8,7 @@ The Zyxel-Matrix, Functional Openwrt Port for DX EX-3301 is developed using Imag
 👉 Most of the proprietary utilities will remain accessible even after transitioning to the Zyxel-Matrix.
 👉 You have the flexibility to revert to original router status at any time by using Rollback firmware. Also, updating to the latest Zyxel firmware is possible through LUCI interface in Zyxel-Matrix.
 
-## ✨ Features 
+## ✨ Features  Full functional Openwrt 
 - **Easy Installation** - No UART or disassembly required! Install from Web interface
 - **MSSID** - Router support Multiple SSIDs
 - **Full Luci Interface** - Manage your router through any browser
