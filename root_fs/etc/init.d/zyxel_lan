@@ -4,6 +4,7 @@ START=92
 # Written as part of EX-3310 port
 start() {
     echo -n "Setup Network > > " > /dev/console
+	/etc/init.d/network stop
     for i in $(seq 1 2); do
         echo -n " > " > /dev/console
         sleep 1
@@ -97,8 +98,6 @@ start() {
                 sleep 1
                 echo "17 38 2 0 0" > /proc/tc3162/led_def
         done
-      mkdir -p /tmp/sysinfo ; echo "Zyxel-Matrix V-15" >> /tmp/sysinfo/model
-
         echo -n " > " > /dev/console
                 for i in $(seq 1 3); do
                         echo -n " > " > /dev/console
@@ -111,11 +110,11 @@ start() {
                 echo 1 > /proc/tc3162/hwnat_off 2>/dev/null
                 echo 1 > /proc/tc3162/igmp_hwnat 2>/dev/null
                 echo 1 > /proc/tc3162/rps_enable 2>/dev/null
-       if [ -n "$LAN_NET" ]; then
+		if [ -n "$LAN_NET" ]; then
                 #chroot /tmp/zyxel_root /usr/sbin/iptables -t nat -A POSTROUTING -s $LAN_NET -o nas10 -j MASQUERADE
-                                /etc/init.d/network stop                        
+                echo 0 > /proc/tc3162/led_pwr_red ; sleep 10 ;          echo 1 > /proc/tc3162/led_pwr_red                      
        fi
-                      echo 0 > /proc/tc3162/led_pwr_red ; sleep 10 ;          echo 1 > /proc/tc3162/led_pwr_red
+                      
                         #uncomment to remove HW driver,  if wifi speed is slow
                 echo -n " > " > /dev/console
                 for i in $(seq 1 3); do
@@ -123,8 +122,13 @@ start() {
                         sleep 1
         done
                 echo " 100% ] ...  Restarting Network" > /dev/console
-                #/etc/init.d/network start
                 /etc/init.d/network start
+				LINE=$(dd if=/dev/mtdblock3 2>/dev/null | strings | grep -E "V-[0-9]+.*@");
+				VERSION=$(echo "$LINE" | cut -d' ' -f1 | cut -d'-' -f2) ;
+				EMAIL=$(echo "$LINE" | cut -d' ' -f2) ;
+				mkdir -p /tmp/sysinfo ; echo $VERSION >> /tmp/sysinfo/model ;
+
+				
                 for i in $(seq 1 1); do
                 echo "34 4 2 0 1" > /proc/tc3162/led_def
                 sleep 1

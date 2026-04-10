@@ -2,7 +2,7 @@
 ZYXEL-MATRIX DX-EX3301-T0 FIRMWARE CHANGELOG
 ================================================
 
-Version: 1.0.0 March 2026 (V-15)
+Version: 1.8.0 March 2026 (V-16)
 Author: Qureshi Majad
 Router: ZyXEL EX3301-T0 AX1800 Dual-band -WiFi6
 
@@ -19,13 +19,78 @@ fully functional Openwrt on EX-3301-T0 router.
 
 VERSION HISTORY
 ---------------
+1.8.0 April 2026) Stable V-16
+   • Vlan conectivity improved
+   • Stable Wireless mode
+   • Tuned up data transfer
+   • Stable Luci interface
+   • Fixed early release bugs
 
-1.0.0 (March 2026) - Alpha
+1.0.0 (March 2026) - Alpha V-15
    • Openwrt Fully functional OS
    • Roll back option to revert to Official OS
 
 --------------------------------------------------------------------
+--------------------------------------------------------------------
 
+BUG FIXES
+---------
+SSH known issue is fixed
+5g and 2g guest wifi removed til lissue is solved
+--------------------------------------------------------------------
+
+KNOWN ISSUES
+------------
+• Boot takes approximately 2-3 minutes
+• Some Guest WiFi features making issues
+• SSH ( selecting LAN interface binding to dropbear sometime lock you out)
+
+--------------------------------------------------------------------
+
+COMING SOON (Future Releases)
+-----------------------------
+
+--------------------------------------------------------------------
+
+INSTALLATION NOTES
+------------------
+REQUIRED FILES:
+   • Zyxel-Matrix-Loader.exe 
+   • openwrt-zyxel-matrix-14.07-rtkmips-wsr30-squashfs-sysupgrade-v4.0 (v4.0.0)
+
+COMPATIBILITY:
+   • Router: Zyxel Multy U AC2100 (WSR30) only
+   • OS: Windows 10/11 (with TFTP client enabled)
+   • Browser: Chrome, Firefox, Edge (for Luci interface)
+
+UPGRADE NOTES:
+   • Always backup configuration before upgrading
+   • Use same flashing procedure as initial install
+   • Settings may need reconfiguration after upgrade
+
+--------------------------------------------------------------------
+
+VERSION HISTORY
+---------------
+1.8.0 (November 2025)
+   • Initial public release, only to intranet users
+   • Stable AP mode operation
+   • Working repeater mode
+   • Complete Luci interface
+   • Fixed early release bugs
+
+1.5.0 (February 2026) - Beta
+   • Beta testing release
+   • Basic functionality
+   • Known RPCD issues
+   • Limited WiFi configuration
+
+1.0.0 (March 2025) - Alpha
+   • Internal testing only
+   • Not for public use
+   • Development preview
+
+--------------------------------------------------------------------
 
 LICENSE
 -------

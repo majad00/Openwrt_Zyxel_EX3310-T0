@@ -79,7 +79,8 @@ start() {
     ifconfig br0 down 2>/dev/null
 
     # FIx Destroy the dummy bridge so it doesn't cause routing loops
-    brctl delbr br0 2>/dev/null
+    #brctl delbr br0 2>/dev/null
+	brctl addif br-lan br0
     echo "Matrix Ready!" > /dev/console
 }
 
