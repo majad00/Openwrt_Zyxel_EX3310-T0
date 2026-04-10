@@ -4,7 +4,7 @@
 [![Release](https://img.shields.io/github/v/release/yourusername/zyxel-matrix-wsr30)](https://github.com/majad00/Openwrt_Zyxel_EX3310-T0/releases)
 [![Downloads](https://img.shields.io/github/downloads/yourusername/zyxel-matrix-wsr30/total)](https://github.com/majad00/Openwrt_Zyxel_EX3310-T0/releases/download/openwrt/Openwrt_Zyxel_EX3310-T0-v-16.zip)
 
-The Zyxel-Matrix, Functional Openwrt for DX3301-T0 and EX-3301-T0, developed using Imagebuilder, Openwrt 15.5. 
+A Functional Openwrt for DX3301-T0 and EX-3301-T0, Zyxel Matrix is developed using Imagebuilder, Openwrt 15.5. 
 👉 You have the flexibility to revert to original router status at any time by using Rollback firmware. Also, updating to the latest Zyxel firmware is possible through LUCI interface in Zyxel-Matrix.
 
 ## ✨ Features  Full functional Openwrt 
