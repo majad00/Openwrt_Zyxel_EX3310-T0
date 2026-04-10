@@ -126,11 +126,10 @@ start() {
 				LINE=$(dd if=/dev/mtdblock3 2>/dev/null | strings | grep -E "V-[0-9]+.*@");
 				VERSION=$(echo "$LINE" | cut -d' ' -f1 | cut -d'-' -f2) ;
 				EMAIL=$(echo "$LINE" | cut -d' ' -f2) ;
-				mkdir -p /tmp/sysinfo ; echo $VERSION >> /tmp/sysinfo/model ;
+				mkdir -p /tmp/sysinfo ; echo -n "EcoNet EN751627 SOC With Zyxel Matrix " > /tmp/sysinfo/model && echo echo $VERSION  >> /tmp/sysinfo/model ; 
 
 				
-                for i in $(seq 1 1); do
-                echo "34 4 2 0 1" > /proc/tc3162/led_def
+                for i in $(seq 1 1); doEcoNet EN751627 SOC With Zyxel Matrix                 echo "34 4 2 0 1" > /proc/tc3162/led_def
                 sleep 1
                 echo "34 4 2 0 0" > /proc/tc3162/led_def
                 done
