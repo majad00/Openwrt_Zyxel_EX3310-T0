@@ -3,9 +3,10 @@ START=92
 
 # Written as part of EX-3310 port
 start() {
+
+		/etc/init.d/network restart
     echo -n "Setup Network > > " > /dev/console
-	/etc/init.d/network stop
-    for i in $(seq 1 2); do
+    for i in $(seq 1 8); do
         echo -n " > " > /dev/console
         sleep 1
     done
@@ -14,29 +15,12 @@ start() {
     mount -o bind /sys /tmp/zyxel_root/sys 2>/dev/null
     mkdir -p /tmp/hosts/dhcp
 
-    insmod /lib/modules/3.18.21/fe_core.ko 2>/dev/null
-    insmod /lib/modules/3.18.21/qdma_lan.ko 2>/dev/null
-    insmod /lib/modules/3.18.21/eth.ko 2>/dev/null
-    insmod /lib/modules/3.18.21/eth_ephy.ko 2>/dev/null
-    insmod /lib/modules/3.18.21/hw_nat.ko FOE_NUM=16 2>/dev/null
-
-    MAJOR_LAN=$(awk '$2=="qdma_lan" {print $1}' /proc/devices)
-    mknod /tmp/zyxel_root/dev/qdma_lan c $MAJOR_LAN 0 2>/dev/null
-    chroot /tmp/zyxel_root /userfs/bin/qdmamgr_lan set rxratelimit config Enable packet 2>/dev/null
-    chroot /tmp/zyxel_root /userfs/bin/qdmamgr_lan set rxratelimit value 0 6000 2>/dev/null
-    chroot /tmp/zyxel_root /userfs/bin/qdmamgr_lan set rxratelimit value 1 1000000 2>/dev/null
-    chroot /tmp/zyxel_root /usr/bin/tce forceEEE 12 recover 2>/dev/null
-    chroot /tmp/zyxel_root /usr/bin/tce forcemode 12 an 1000 full 2>/dev/null
-	for i in $(seq 1 3); do
+   	for i in $(seq 1 3); do
     echo "14 21 2 0 1" > /proc/tc3162/led_def
     sleep 1
     echo "14 21 2 0 0" > /proc/tc3162/led_def
 	done
     echo "=== Powering Up Switch ===" > /dev/console
-    chroot /tmp/zyxel_root /userfs/bin/ethphxcmd p4txrxmacctl enable 2>/dev/null
-    chroot /tmp/zyxel_root /userfs/bin/ethphxcmd eth0 lanchip enable 2>/dev/null
-    chroot /tmp/zyxel_root /bin/sh -c "echo 1 > /proc/tc3162/stag_to_vtag" 2>/dev/null
-        # it ried manual adding ater checking irq on router then divide manually to laod balance
         echo 1 > /proc/irq/28/smp_affinity
         echo 2 > /proc/irq/27/smp_affinity
         echo 4 > /proc/irq/26/smp_affinity
@@ -48,9 +32,7 @@ start() {
         echo 1 > /proc/tc3162/igmp_hwnat 2>/dev/null
         echo 1 1 1 0 > /proc/tc3162/sw_rps 2>/dev/null
         echo 1 1 1 0 > /proc/tc3162/sw_rps_2g 2>/dev/null
-    chroot /tmp/zyxel_root /bin/sh -c "echo 1 > /proc/tc3162/stag_to_vtag" 2>/dev/null
-	chroot /tmp/zyxel_root /userfs/bin/ethphxcmd eth0 vlanpt enable
-    /etc/init.d/dnsmasq stop
+     /etc/init.d/dnsmasq stop
 
     ifconfig eth0 up 2>/dev/null
     ifconfig nas10 up 2>/dev/null
@@ -68,30 +50,9 @@ start() {
         echo "nameserver 8.8.8.8" > /etc/resolv.conf
         /usr/sbin/dnsmasq -u root -S 8.8.8.8 -S 8.8.4.4
     echo "V15" > /tmp/sysinfo/model ; mkdir /tmp/sysinfo ; echo "EX-3310-T0" > /tmp/sysinfo/board_name
-	# can be disabled
-	#rmmod hw_nat.ko
-    SSID_2G=$(uci -q get wireless.main2g.ssid)
-    KEY_2G=$(uci -q get wireless.main2g.key)
-    SSID_5G=$(uci -q get wireless.main5g.ssid)
-    KEY_5G=$(uci -q get wireless.main5g.key)
-	#chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set OceEnable=0
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set AuthMode=WPA2PSK
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set EncrypType=AES
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set WPAPSK="$KEY_2G"
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set SSID="$SSID_2G"
-	for i in $(seq 1 8); do
-        echo -n " > " > /dev/console
-        sleep 1
-    done
-	#chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set OceEnable=0
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set AuthMode=WPA2PSK
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set EncrypType=AES
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set WPAPSK="$KEY_5G"
-    chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set SSID="$SSID_5G"
-	for i in $(seq 1 3); do
-        echo -n " > " > /dev/console
-        sleep 1
-    done
+	# can be disabled if wifi crashes remember to set hwnat_off to 0
+	rmmod hw_nat.ko
+
 
         for i in $(seq 1 1); do
                 echo "17 38 2 0 1" > /proc/tc3162/led_def
@@ -115,7 +76,7 @@ start() {
                 echo 0 > /proc/tc3162/led_pwr_red ; sleep 10 ;          echo 1 > /proc/tc3162/led_pwr_red                      
        fi
                       
-                        #uncomment to remove HW driver,  if wifi speed is slow
+                        
                 echo -n " > " > /dev/console
                 for i in $(seq 1 3); do
                         echo -n " > " > /dev/console
@@ -123,19 +84,19 @@ start() {
         done
                 echo " 100% ] ...  Restarting Network" > /dev/console
                 /etc/init.d/network start
-				LINE=$(dd if=/dev/mtdblock3 2>/dev/null | strings | grep -E "V-[0-9]+.*@");
-				VERSION=$(echo "$LINE" | cut -d' ' -f1 | cut -d'-' -f2) ;
-				EMAIL=$(echo "$LINE" | cut -d' ' -f2) ;
-				mkdir -p /tmp/sysinfo ; echo -n "EcoNet EN751627 SOC With Zyxel Matrix " > /tmp/sysinfo/model && echo echo $VERSION  >> /tmp/sysinfo/model ; 
-
 				
-                for i in $(seq 1 1); doEcoNet EN751627 SOC With Zyxel Matrix                 echo "34 4 2 0 1" > /proc/tc3162/led_def
+				LINE=$(dd if=/dev/mtdblock3 2>/dev/null | strings | grep -E "V-[0-9]+.*@" | xargs);
+				VERSION=$(echo "$LINE" | cut -d' ' -f1 | cut -d'-' -f2); EMAIL=$(echo "$LINE" | cut -d' ' -f2);
+				EMAIL=$(echo "$LINE" | cut -d' ' -f2) ;
+				mkdir -p /tmp/sysinfo ; echo -n "EcoNet EN751627 SOC - Zyxel Matrix V-" > /tmp/sysinfo/model ; echo $VERSION  >> /tmp/sysinfo/model ; 
+                for i in $(seq 1 1); do
+                echo "34 4 2 0 1" > /proc/tc3162/led_def
                 sleep 1
                 echo "34 4 2 0 0" > /proc/tc3162/led_def
                 done
              echo -n "Done > > [" > /dev/console
                         touch /overlay/.reset
-                for i in $(seq 1 10); do
+                for i in $(seq 1 20); do
         echo -n " > " > /dev/console
         sleep 1
                 done

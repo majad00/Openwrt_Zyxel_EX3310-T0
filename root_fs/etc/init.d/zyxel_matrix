@@ -7,7 +7,7 @@ STOP=10
 ZYXEL_ROOT="/tmp/zyxel_root"
 
 start() {
-	
+
     sync; echo 3 > /proc/sys/vm/drop_caches
 
     sysctl -w net.unix.max_dgram_qlen=64 2>/dev/null
@@ -15,7 +15,7 @@ start() {
     echo 20000 > /proc/net/skbmgr_limit 2>/dev/null
     echo 40000 > /proc/net/skbmgr_driver_max_skb 2>/dev/null
     echo 4096 2048 > /proc/net/skbmgr_hot_list_len 2>/dev/null
-	umount -l $ZYXEL_ROOT/proc $ZYXEL_ROOT/sys $ZYXEL_ROOT/dev $ZYXEL_ROOT/tmp $ZYXEL_ROOT/bin $ZYXEL_ROOT/sbin $ZYXEL_ROOT/usr $ZYXEL_ROOT/lib $ZYXEL_ROOT/userfs $ZYXEL_ROOT/etc $ZYXEL_ROOT/data 2>/dev/null
+        umount -l $ZYXEL_ROOT/proc $ZYXEL_ROOT/sys $ZYXEL_ROOT/dev $ZYXEL_ROOT/tmp $ZYXEL_ROOT/bin $ZYXEL_ROOT/sbin $ZYXEL_ROOT/usr $ZYXEL_ROOT/lib $ZYXEL_ROOT/userfs $ZYXEL_ROOT/etc $ZYXEL_ROOT/data 2>/dev/null
     rm -rf $ZYXEL_ROOT
 
     mkdir -p $ZYXEL_ROOT
@@ -75,13 +75,31 @@ start() {
         echo -n " > " > /dev/console
         sleep 1
     done
-    echo "] 100% Complete!" > /dev/console
     ifconfig br0 down 2>/dev/null
 
     # FIx Destroy the dummy bridge so it doesn't cause routing loops
     #brctl delbr br0 2>/dev/null
-	brctl addif br-lan br0
-    echo "Matrix Ready!" > /dev/console
+        brctl addif br-lan br0
+   echo "] 100% Complete!" > /dev/console
+	/etc/init.d/network stop
+	
+	SSID_2G=$(uci -q get wireless.main2g.ssid)
+    KEY_2G=$(uci -q get wireless.main2g.key)
+    SSID_5G=$(uci -q get wireless.main5g.ssid)
+    KEY_5G=$(uci -q get wireless.main5g.key)
+	#chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set OceEnable=0
+    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set AuthMode=WPA2PSK
+    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set EncrypType=AES
+    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set WPAPSK="$KEY_2G"
+    chroot /tmp/zyxel_root /usr/sbin/iwpriv ra0 set SSID="$SSID_2G"
+	
+	#chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set OceEnable=0
+    chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set AuthMode=WPA2PSK
+    chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set EncrypType=AES
+    chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set WPAPSK="$KEY_5G"
+    chroot /tmp/zyxel_root /usr/sbin/iwpriv rai0 set SSID="$SSID_5G"
+	sleep 2
+	 echo "Matrix Ready!" > /dev/console
 }
 
 stop() {
@@ -100,3 +118,4 @@ stop() {
     rm -rf $ZYXEL_ROOT
     echo "Matrix Stopped and RAM Cleared." > /dev/console
 }
+

@@ -3,19 +3,19 @@
 START=99
 
 start() {
-    /usr/bin/zyxel_wifi_sync
+    /usr/sbin/zyxel_wifi_sync
 }
 
 stop() {
-    	ifconfig ra0 down
-    	ifconfig rai0 down
+    ifconfig ra0 down
+    ifconfig rai0 down
 }
 
 # When LuCI clicks Save & Apply, it triggers restart/reload
 restart() {
-    /usr/bin/zyxel_wifi_sync
+    /usr/sbin/zyxel_wifi_sync
 }
 
 reload() {
-    /usr/bin/zyxel_wifi_sync
+    /usr/sbin/zyxel_wifi_sync
 }
