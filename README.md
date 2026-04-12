@@ -4,12 +4,11 @@
 [![Release](https://img.shields.io/github/v/release/yourusername/zyxel-matrix-wsr30)](https://github.com/majad00/Openwrt_Zyxel_EX3310-T0/releases)
 [![Downloads](https://img.shields.io/github/downloads/yourusername/zyxel-matrix-wsr30/total)](https://github.com/majad00/Openwrt_Zyxel_EX3310-T0/releases/download/openwrt/Openwrt_Zyxel_EX3310-T0-v-16.zip)
 
-A Functional Openwrt for DX3301-T0 and EX-3301-T0, Zyxel Matrix is developed using Imagebuilder, Openwrt 15.5. 
+A Functional Openwrt for DX3301-T0 and EX-3301-T0, Zyxel Matrix is developed using Imagebuilder, Openwrt 15.5 source code. 
 👉 You have the flexibility to revert to original router status at any time by using Rollback firmware. Also, updating to the latest Zyxel firmware is possible through LUCI interface in Zyxel-Matrix.
 
 ## ✨ Features  Full functional Openwrt 
 - **Easy Installation** - No UART or disassembly required! Install from Web interface
-- **MSSID** - Router support Multiple SSIDs
 - **Full Luci Interface** - Manage your router through any browser
 - **Advanced Radio Control** - Control over all available Radios
 - **SSH Access** - for lowe level tasks
@@ -20,7 +19,7 @@ A Functional Openwrt for DX3301-T0 and EX-3301-T0, Zyxel Matrix is developed usi
 ## 📥 Quick Download
 
 👉 **[Download Latest Release](https://github.com/majad00/Openwrt_Zyxel_EX3310-T0/releases/download/openwrt/Openwrt_Zyxel_EX3310-T0-v-16.zip)**
-	Current version : v-16 sha256:8c44ff486a6fedf4d7f2b56da33f611f1ff7642e41b6215a6c014f3d22abb742
+	Current version : v-16 sha256:9757ebceb4f00c64db7aab82ed901b608e18428f89b4261af819b02307d7151e
 The download includes:
 - `openwrt-15.5-zyxel-matrix-v-15-squashfs-sysupgrade.bin` - Zyxel-Matrix for DX3301-T0 and EX3301-T0
 - `zyxel-3.3-squashfs-rollback.bin` - Roll Back to Zyxal factory firmware
@@ -35,16 +34,18 @@ The download includes:
 3. **Flash**: From drop down menu Select Maintenance → click Firmware Upgrade
 4. **Wait** 2-3 minutes for first boot
 5. **Connect WiFi**: `Zyxel_Matrix` / `12345678` ( Enable through LUCI)
-6. **Configure**: http://192.168.1.1 (root/no passwrod or 1234)
+6. **Configure**: http://192.168.1.1 (root/no passwrod )
 
-> ⚠️ **IMPORTANT**: Change password after first boot!, on successfull boot the power LED will blink RED for a second
+> ⚠️ **IMPORTANT**: Change password after first boot!, on successfull boot the network LED starts blinking
 > ⚠️ **Optional**: After flashing Zyxel-Matrix, please reset to make sure previous Zyxel settings removed
 
 ## 🚀 Flashing using UART (safe for testing )
 1. **Connect** Using TX, RX and GND, rename the firmware to RAS.bin (optional)
-2. **Get to Shell**: Intrupt boot process by pressing any button, rename the firmware 
-3. **Flash**: ATUR RAS.bin ( router will start a tftp server and wait for the file), send that RAS.bin file using TFTP.
-4. **Wait** Bootloader will take file and write to proper offsets, router will reboot, wait for 2-3 minutes for first boot
+2. **Get to Shell**: Intrupt boot process by pressing any button
+3. **Prepare**: Type "ATUR RAS.bin" ( router will start a tftp server and wait for the file)
+4. **Flash**: Send RAS.bin file using TFTP, tftp 192.168.1.1 
+5. **Wait**: Bootloader will write RAS.bin to proper offsets, Power LED is red
+6. **First Boot**: router will reboot, wait for 2-3 minutes for first boot
 
 ## 📋 Detailed Documentation
 
