@@ -1,10 +1,10 @@
-# Openwrt for MediaTek/Airoha EN751627 based chips ( v-17 tested on EX3301 Router) 
+# Openwrt for MediaTek/Airoha EN751627 based chips ( EX3301-T0 / DX3301-T0) 
 
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/majad00/zyxel-matrix-wsr30)](https://github.com/majad00/Openwrt_Zyxel_EX3310-T0/releases)
 [![Downloads](https://img.shields.io/github/downloads/majad00/zyxel-matrix-wsr30/total)](https://github.com/majad00/Openwrt_Zyxel_EX3310-T0/releases/tag/Openwrt)
 
-A Functional Openwrt for DX3301-T0 and EX-3301-T0, Zyxel Matrix is developed using Imagebuilder, Openwrt 15.5 source code. 
+A Functional Openwrt for DX3301-T0 and EX-3301-T0, Zyxel Matrix is community build firmware , developed using Imagebuilder, Openwrt 15.5 source code. 
 👉 You can revert to OEM firmware status at any time by doing a Rollback, or update latest Zyxel firmware through LUCI interface.
 
 ### Version V-17 includes support for Wi-Fi backhaul. You can activate this feature from Network > Mesh Backhaul.
