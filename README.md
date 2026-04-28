@@ -1,4 +1,4 @@
-# Openwrt for MediaTek/Airoha EN751627 based chips ( EX3301-T0) 
+# Openwrt for MediaTek/Airoha EN751627 (Zyxel EX3301-T0) 
 
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/majad00/zyxel-matrix-wsr30)](https://github.com/majad00/Openwrt_Zyxel_EX3310-T0/releases)
