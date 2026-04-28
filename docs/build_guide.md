@@ -150,7 +150,8 @@ The tools will work specifically with:
 ## License
 
 This project is licensed under the GNU General Public License v2.0.
-Most of the code was taken from opensource , some part is written by students of embedded engineering and reviewed by project researcher Majad Qureshi, as lead programmer.
+Most of the code was taken from opensource , some part is written by students of embedded engineering and reviewed by project researcher.
+
 ---
 
 **Status:** Beta Testing  
