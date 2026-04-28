@@ -5,13 +5,13 @@
 [![Downloads](https://img.shields.io/github/downloads/majad00/zyxel-matrix-wsr30/total)](https://github.com/majad00/Openwrt_Zyxel-EX3301-T0/releases/tag/Openwrt)
 
 A Functional Openwrt for DX3301-T0 and EX-3301-T0, Zyxel Matrix is community build firmware , developed using Imagebuilder, Openwrt 15.5 source code. 
-👉 You can revert to OEM firmware status at any time by doing a Rollback, or update latest Zyxel firmware through LUCI interface.
+You can revert to OEM firmware status at any time by doing a Rollback, or update latest Zyxel firmware through LUCI interface.
 
 ### Version V-17 includes support for Wi-Fi backhaul. You can activate this feature from Network > Mesh Backhaul.
 ⚠️ **Important**: Please use either WAN or Wi-Fi backhaul. Using both together may slow performance.
 
 
-## ✨ Features  Full functional Openwrt 
+##  Features  Full functional Openwrt 
 - **Easy Installation** - No UART or disassembly required! Install from Web interface
 - **Full Luci Interface** - Manage your router through any browser
 - **Advanced Radio Control** - Control over all available Radios
@@ -31,7 +31,7 @@ The download includes:
 - `CHANGELOG.txt` - Version history
 - `docs` - for detail documentations and installation
   
-## 🚀 Flashing in 2 minutes 
+## Flashing in 2 minutes 
 
 1. **Connect** Ethernet cable from PC to router
 2. **Login to router**: Login to OEM Zyxel router through web
@@ -43,7 +43,7 @@ The download includes:
 > ⚠️ **IMPORTANT**: Change password after first boot!, on successfull boot the network LED starts blinking
 
 
-## 🚀 Flashing using UART (safe for testing )
+##  Flashing using UART (safe for testing )
 1. **Connect** Using TX, RX and GND, rename the firmware to RAS.bin (optional)
 2. **Get to Shell**: Intrupt boot process by pressing any button
 3. **Prepare**: Type "ATUR RAS.bin" ( router will start a tftp server and wait for the file)
